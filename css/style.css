@@ -1,0 +1,13 @@
+#shopping-list{
+    display: grid;
+    grid-template-columns: 1 1;
+}
+
+#first_section{
+    background-color: lightyellow;
+    grid-column: 1;
+}
+#secondHeader{
+    background-color: lightblue;
+    grid-column: 2;
+}

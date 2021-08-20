@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- top section with list items and button to toggle adding new items on and off -->
+    <div id="shopping-list">
+        <div id="first_section">
+            <div class="header">
+                <h1>{{header || 'welcome'}}</h1>
+            </div>
+                <p v-if="items.length === 0"> Noise</p>
+            <ul>
+                <li
+                    v-for="item in items" 
+                    @click = "togglePurchased(item)"
+                    :key ="item.id"
+                    :class="{strikeout: item.purchased, priority: item.highPriority}"
+                >
+                {{item.label}}
+                </li></br>
+                <button v-if="editing" @click="doEdit(false)" class="btn btn-cancel">Cancel</button>
+                <button v-else @click="doEdit(true)" class="btn btn-add">Add Item</button>
+            </ul>
+        </div>
+        <!-- bottom section with input field and newly created list items -->
+        <div id="secondHeader">
+            <h1>{{secondHeader}}</h1>
+            <p v-if="newItems.length === 0"> Noise</p>
+
+            <li 
+                v-for="item in newItems" 
+                @click = "togglePurchased(item)"
+                :key ="item.id"
+                >
+                {{item.label}}
+            </li>
+
+            <div v-if="editing" class="add-item-form">
+                <input 
+                @keyup.enter="saveItem" 
+                type="text" v-model ="newItem"  placeholder="Add item here">
+                <label>
+                    <input type="checkbox" v-model="newItemHighPriority">
+                    High Priority
+                </label></br>
+                <button
+                    v-bind:disabled="newItem.length === 0"
+                    @click="saveItem" 
+                    class="btn btn-primary">
+                    Save Item
+                </button>
+                <button @click="deleteItem(items)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script>
+       const vueTesting = Vue.createApp({
+            data(){
+                return{
+                    header: "Shopping list App",
+                    editing: true,
+                    newItem: '',
+                    newItemHighPriority: false,
+                    items: [
+                         {id: 1, label:'banana', purchased: true, highPriority: true},
+                         {id: 2, label:'oranges', purchased: false, highPriority: false},
+                         {id: 3, label:'pinacolada', purchased: true, highPriority: true}
+                    ],
+                    secondHeader: "Shopping basket",
+                    editing: true,
+                    newItems:[],
+                }
+            },
+            computed:{
+                reversedItems(){
+                    return [...this.items].reverse()
+                }
+            },
+            methods:{
+                saveItem(){
+                    this.newItems.push({ 
+                        id: this.items.length + 1, 
+                        label: this.newItem,
+                        checkbox: this.newItem,
+                        highPriority: this.newItemHighPriority
+                    }),
+                    this.newItem = "",
+                    this.newItemHighPriority = false
+                },
+                doEdit(editing){
+                    this.editing = editing
+                    this.newItem = "",
+                    this.newItemHighPriority = false
+                },
+                togglePurchased(item){
+                    item.purchased = !item.purchased
+                },
+                deleteItem(item){
+                    this.newItems.splice(item.purchased, 1);
+                },
+            }
+        }).mount('#shopping-list','#shoppingBasket')
+    </script>
+</body>
+</html>
